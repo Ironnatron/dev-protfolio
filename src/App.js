@@ -1,23 +1,43 @@
-import logo from './logo.svg';
+// App.js
+import React, { useState, useEffect } from 'react';
+import Page1 from './components/Page1';
+import Page2 from './components/Page2';
+import Page3 from './components/Page3';
 import './App.css';
 
 function App() {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const pageHeight = window.innerHeight;
+      const nextPageThreshold = currentPage * pageHeight;
+
+      if (scrollPosition >= nextPageThreshold) {
+        setCurrentPage(prevPage => prevPage + 1);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [currentPage]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="pages-container">
+        <div className={`page page-${currentPage === 1 ? 'active' : 'hidden'}`}>
+          <Page1 />
+        </div>
+        <div className={`page page-${currentPage === 2 ? 'active' : 'hidden'}`}>
+          <Page2 />
+        </div>
+        <div className={`page page-${currentPage === 3 ? 'active' : 'hidden'}`}>
+          <Page3 />
+        </div>
+      </div>
     </div>
   );
 }
